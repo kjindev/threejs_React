@@ -1,35 +1,23 @@
-import React, { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import "./index.css";
+import React from "react";
+import { Canvas, useLoader } from "@react-three/fiber";
+import { Environment, OrbitControls } from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 
-function Box({ time, ...props }) {
+const Model = () => {
+  const gltf = useLoader(GLTFLoader, "./laptop.gltf");
   return (
-    <mesh {...props}>
-      <boxGeometry />
-      <meshStandardMaterial roughness={0.75} />
-    </mesh>
+    <>
+      <primitive object={gltf.scene} scale={0.4} />
+    </>
   );
-}
+};
 
-function Content() {
-  const ref = useRef();
-  useFrame(() => (ref.current.rotation.x = ref.current.rotation.y += 0.015));
+export default function App() {
   return (
-    <group ref={ref}>
-      <Box position={[0, 0, 0]} />
-    </group>
-  );
-}
-
-function App() {
-  return (
-    <Canvas camera={{ position: [0, 10, 0] }}>
-      <pointLight color="black" />
-      <pointLight position={[10, 10, -10]} color="orange" />
-      <pointLight position={[-10, -10, 10]} color="white" />
-      <Content />
+    <Canvas>
+      <Model />
+      <OrbitControls />
+      <Environment preset="sunset" />
     </Canvas>
   );
 }
-
-export default App;
